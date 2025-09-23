@@ -4,11 +4,87 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css">
   <title>Boas-vindas</title>
-  <script>
-    function irParaSorteio() {
-      window.location.href="amigosecreto.html"; // redireciona para a página do sorteio
-    }
-  </script>
+
+  <style>
+    /* =====================================
+   CSS - Página Inicial do Amigo Secreto
+===================================== */
+
+/* fundo da página */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fcd8ff 0%, #fad0c4 100%);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* container central */
+.container {
+  text-align: center;
+}
+
+/* card principal */
+.card {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 40px 50px;
+  border-radius: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  display: inline-block;
+}
+
+/* título principal */
+.card h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+/* botão principal */
+.card .btn {
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 15px;
+  background: #fff;
+  color: #fcd8ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card .btn:hover {
+  background: #e8c2ff;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* botão tema (opcional) */
+#theme-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+  background: #fff;
+  color: #fcd8ff;
+}
+
+  </style>
 </head>
 <body>
   <button id="theme-toggle">🌙</button>
@@ -16,8 +92,8 @@
 <div class="container">
   <div class="card welcome-hero">
     <h1>🎉 Boas-vindas ao Amigo Secreto 🎁</h1>
-    <p>Clique abaixo e faça seu sorteio!</p>
-    <button class="btn" onclick="irParaSorteio()">Começar</button>
+    <button onclick="window.location.href='amigosecreto.html'">Clique aqui para o sorteio</button>
+
   </div>
 </div>
 </body>

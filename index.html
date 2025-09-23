@@ -5,83 +5,95 @@
   <link rel="stylesheet" href="style.css">
   <title>Boas-vindas</title>
 
-  <style>
-
-/* fundo da página */
+ <style>
+/* fundo com gradiente animado */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #fcd8ff 0%, #fad0c4 100%);
-  color: #fff;
   margin: 0;
   padding: 0;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  background: linear-gradient(-45deg, #0f0f14, #1a1b26, #2d1b36, #1e2a38);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  transition: background 0.5s ease;
 }
 
-/* container central */
+/* animação suave do gradiente */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* container e card */
 .container {
   text-align: center;
 }
 
-/* card principal */
 .card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
   padding: 40px 50px;
-  border-radius: 25px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   display: inline-block;
+  transition: transform 0.3s ease;
 }
 
-/* título principal */
+.card:hover {
+  transform: scale(1.03);
+}
+
 .card h1 {
-  font-size: 36px;
+  font-size: 34px;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
 }
 
-/* botão principal */
-.card .btn {
+/* botão */
+.btn {
   padding: 12px 25px;
   font-size: 18px;
   border: none;
-  border-radius: 15px;
-  background: #fff;
-  color: #fcd8ff;
+  border-radius: 12px;
+  background: #7a5cff;
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(122, 92, 255, 0.4);
 }
 
-.card .btn:hover {
-  background: #e8c2ff;
-  color: #fff;
+.btn:hover {
+  background: #9b7dff;
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(155, 125, 255, 0.6);
 }
 
-/* botão tema (opcional) */
+/* botão de tema */
 #theme-toggle {
   position: fixed;
   top: 15px;
   right: 15px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
   border: none;
   border-radius: 50%;
   width: 45px;
   height: 45px;
   font-size: 20px;
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 #theme-toggle:hover {
-  background: #fff;
-  color: #fcd8ff;
+  transform: rotate(15deg) scale(1.1);
+  background: rgba(255,255,255,0.2);
 }
-
-  </style>
+</style>
 </head>
 <body>
   <button id="theme-toggle">🌙</button>

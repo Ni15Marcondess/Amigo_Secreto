@@ -89,9 +89,19 @@ body {
 <div class="container">
   <div class="card welcome-hero">
     <h1>🎉 Boas-vindas ao Amigo Secreto 🎁</h1>
-    <button onclick="window.location.href='amigosecreto.html'">Clique aqui para o sorteio</button>
-
+    <button id="btnIniciar" class="btn">Clique aqui para sortear</button>
   </div>
 </div>
+
+<script>
+  const btnIniciar = document.getElementById("btnIniciar");
+
+if(btnIniciar){
+  btnIniciar.addEventListener("click", ()=>{
+    window.location.href = "amigosecreto.html";
+  });
+}
+
+</script>
 </body>
 </html>

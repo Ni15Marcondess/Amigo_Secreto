@@ -23,16 +23,6 @@ if (themeToggle) {
 }
 
 // =====================
-// Página Inicial
-// =====================
-const btnIniciar = document.getElementById("btnIniciar");
-if (btnIniciar) {
-  btnIniciar.addEventListener("click", () => {
-    window.location.href = "AmigoSecreto.html";
-  });
-}
-
-// =====================
 // Página Amigo Secreto
 // =====================
 const nomeInput = document.getElementById("nomeInput");

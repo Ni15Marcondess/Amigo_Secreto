@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultado do Amigo Secreto</title>
+
+  <style>
+    :root {
+      --bg-dark: #0f0f14;
+      --bg-light: #f2f6fc;
+      --card-dark: #1a1b26;
+      --card-light: #ffffff;
+      --text-dark: #ffffff;
+      --text-light: #111;
+      --accent: #ff7f50;
+      --transition: 0.3s;
+    }
+
+    body.resultado {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.resultado.dark { background: var(--bg-dark); color: var(--text-dark); }
+    body.resultado.light { background: var(--bg-light); color: var(--text-light); }
+
+    .container { width: 90%; max-width: 500px; }
+    .card {
+      background: var(--card-dark);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      padding: 30px;
+      text-align: center;
+      transition: background var(--transition), color var(--transition);
+    }
+    body.resultado.light .card { background: var(--card-light); }
+
+    h1 { font-size: 2rem; margin-bottom: 15px; }
+    p { margin-bottom: 20px; }
+
+    ul { list-style: none; padding: 0; margin: 0 0 20px 0; }
+    li { margin: 10px 0; }
+    li button {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform var(--transition), background var(--transition);
+    }
+    li button:hover { transform: scale(1.05); background: #ff6347; }
+
+    .btn {
+      margin: 5px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform var(--transition), background var(--transition);
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn:hover { transform: scale(1.05); background: #ff6347; }
+
+    #theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: var(--card-dark);
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform var(--transition), background var(--transition);
+      z-index: 1000;
+    }
+    #theme-toggle:hover { transform: scale(1.1); background: var(--accent); color: #fff; }
+
+    /* Fundo com estrelinhas */
+    body.resultado::before,
+    body.resultado::after {
+      content: "";
+      position: fixed;
+      top:0; left:0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background-repeat: repeat;
+    }
+    body.resultado::before {
+      background-image: radial-gradient(#fff 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: twinkle 3s infinite alternate, moveStars 40s linear infinite;
+      opacity: 0.6;
+    }
+    body.resultado::after {
+      background-image:
+        radial-gradient(#ffb6c1 1px, transparent 1px),
+        radial-gradient(#add8e6 1px, transparent 1px),
+        radial-gradient(#ffd700 1px, transparent 1px);
+      background-size: 60px 60px, 80px 80px, 100px 100px;
+      background-position: 20px 20px, 40px 60px, 0 0;
+      animation: twinkle 4s infinite alternate, moveStars 60s linear infinite;
+      opacity: 0.4;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
+    }
+    @keyframes moveStars {
+      0% { background-position: 0 0, 0 0, 0 0; }
+      100% { background-position: 1000px 1000px, 800px 800px, 600px 600px; }
+    }
+  </style>
+  
+</head>
+<body class="dark resultado">
+  <!-- Botão de tema -->
+  <button id="theme-toggle">🌙</button>
+
+  <div class="container">
+    <div class="card welcome-hero">
+      <h1>🎉 Resultado do Amigo Secreto 🎁</h1>
+      <p>Clique no seu nome para descobrir quem você tirou:</p>
+      <ul id="listaParticipantes"></ul>
+      <button class="btn" onclick="mostrarTodos()">👀 Ver todos</button>
+      <button class="btn" onclick="window.location.href='AmigoSecreto.html'">Voltar ao início</button>
+    </div>
+  </div>
+
+  <!-- Biblioteca de confete -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // 🔹 Tema dark/light
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      document.body.classList.toggle("dark");
+      themeToggle.textContent = document.body.classList.contains("light") ? "🌞" : "🌙";
+      localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+    });
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme") || "dark";
+      document.body.classList.add(savedTheme);
+      themeToggle.textContent = savedTheme === "light" ? "🌞" : "🌙";
+    });
+
+    // 🔹 Confete
+    function jogarConfete() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+    }
+    setTimeout(jogarConfete, 500);
+    setTimeout(jogarConfete, 1500);
+    setTimeout(jogarConfete, 2500);
+
+    // 🔹 Carregar resultado do localStorage
+    const resultado = JSON.parse(localStorage.getItem("resultadoAmigoSecreto")) || [];
+    const pares = resultado.map(item => {
+      const [quem, quemTirou] = item.split(" ➝ ");
+      return { quem, quemTirou };
+    });
+
+    // 🔹 Renderizar lista de participantes
+    const lista = document.getElementById("listaParticipantes");
+    pares.forEach(p => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.textContent = p.quem;
+      btn.className = "btn";
+      btn.onclick = () => alert(`🎁 ${p.quem}, você tirou: ${p.quemTirou}`);
+      li.appendChild(btn);
+      lista.appendChild(li);
+    });
+
+    // 🔹 Mostrar todos
+    function mostrarTodos() {
+      let texto = "🎉 Resultado completo:\n\n";
+      pares.forEach(p => {
+        texto += `${p.quem} ➝ ${p.quemTirou}\n`;
+      });
+      alert(texto);
+    }
+  </script>
+</body>
+</html>

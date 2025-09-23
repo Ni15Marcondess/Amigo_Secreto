@@ -1,102 +1,144 @@
+//alternar o tema 
+const themeToggle = document.getElementById("theme-toggle");
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    document.body.classList.toggle("dark");
+
+    // mudar o icone
+    if (document.body.classList.contains("light")) {
+      themeToggle.textContent = "🌞";
+    } else {
+      themeToggle.textContent = "🌙";
+    }
+
+    // salvar a escolha no localStorage
+    localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+  });
+
+  // carrega o tema salvo
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    document.body.classList.add(savedTheme);
+    themeToggle.textContent = savedTheme === "light" ? "🌞" : "🌙";
+  });
+}
+
 let nomes = [];
 
-// só roda quando o DOM estiver pronto
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("btnAdicionar").addEventListener("click", adicionarNome);
-  document.getElementById("btnSortear").addEventListener("click", sortear);
-});
+// 🔹 adicionar nome
+document.getElementById("btnAdicionar").addEventListener("click", function() {
+  let nome = document.getElementById("nomeInput").value.trim();
 
-function adicionarNome() {
-  let input = document.getElementById("nomeInput");
-  let nome = input.value.trim();
+  if (nome === "") return;
 
-  if (nome === "") {
-    alert("Digite um nome válido!");
+  // primeira letra maiúscula
+  nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+
+  // checar duplicados
+  if (nomes.includes(nome)) {
+    alert("Esse nome já foi adicionado!");
+    document.getElementById("nomeInput").value = "";
     return;
   }
 
   nomes.push(nome);
-
-  // limpa automaticamente o input
-  input.value = "";
-  input.focus();
-
   atualizarLista();
-}
+  document.getElementById("nomeInput").value = "";
+});
 
+// 🔹 atualizar lista na tela
 function atualizarLista() {
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
   nomes.forEach((nome, index) => {
     let li = document.createElement("li");
-    li.className = "part-item"; // adicionar classe para CSS hover
+    li.className = "part-item";
 
-    li.textContent = nome + " "; 
+    let spanNome = document.createElement("span");
+    spanNome.textContent = nome;
+    li.appendChild(spanNome);
 
-    // criar container para botões
+    // container para botões de ação
     let actions = document.createElement("div");
     actions.className = "item-actions";
 
     let btnEditar = document.createElement("button");
     btnEditar.textContent = "✏️";
-    btnEditar.className = "icon-btn"; // opcional para estilo
+    btnEditar.className = "icon-btn";
     btnEditar.onclick = () => renomearNome(index);
 
     let btnRemover = document.createElement("button");
     btnRemover.textContent = "❌";
-    btnRemover.className = "icon-btn"; // opcional para estilo
+    btnRemover.className = "icon-btn";
     btnRemover.onclick = () => removerNome(index);
 
     actions.appendChild(btnEditar);
     actions.appendChild(btnRemover);
+    li.appendChild(actions);
 
-    li.appendChild(actions); // adiciona o container de botões ao li
     lista.appendChild(li);
   });
 }
 
-
+// 🔹 remover nome
 function removerNome(index) {
   nomes.splice(index, 1);
   atualizarLista();
 }
 
-function renomearNome(index) {
-  let novoNome = prompt("Digite o novo nome:", nomes[index]);
-  if (novoNome && novoNome.trim() !== "") {
-    nomes[index] = novoNome.trim();
+function removerNome(index) {
+  const nome = nomes[index];
+  const certeza = confirm(`Você tem certeza que deseja remover "${nome}" da lista?`);
+  
+  if (certeza) {
+    nomes.splice(index, 1);
     atualizarLista();
   }
 }
 
-function sortear() {
+// 🔹 renomear nome
+function renomearNome(index) {
+  let novoNome = prompt("Digite o novo nome:", nomes[index]);
+
+  if (novoNome) {
+    novoNome = novoNome.trim();
+    novoNome = novoNome.charAt(0).toUpperCase() + novoNome.slice(1).toLowerCase();
+
+    // impedir duplicado ao renomear
+    if (nomes.includes(novoNome) && novoNome !== nomes[index]) {
+      alert("Esse nome já existe na lista!");
+      return;
+    }
+
+    nomes[index] = novoNome;
+    atualizarLista();
+  }
+}
+
+// 🔹 sortear amigos
+document.getElementById("btnSortear").addEventListener("click", function() {
   if (nomes.length < 2) {
-    alert("Adicione pelo menos 2 nomes!");
+    alert("Adicione pelo menos 2 participantes para sortear!");
     return;
   }
 
   let sorteados = [...nomes];
+  let resultado = [];
 
-  // Embaralhar com Fisher-Yates
-  for (let i = sorteados.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [sorteados[i], sorteados[j]] = [sorteados[j], sorteados[i]];
+  // embaralhar
+  sorteados.sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < sorteados.length; i++) {
+    let amigo = sorteados[(i + 1) % sorteados.length];
+    resultado.push(`${sorteados[i]} ➝ ${amigo}`);
   }
 
-  // Garantir que ninguém tire a si mesmo
-  for (let i = 0; i < nomes.length; i++) {
-    if (nomes[i] === sorteados[i]) {
-      return sortear(); // refaz o sorteio se der conflito
-    }
-  }
+  // salvar no localStorage
+  localStorage.setItem("resultadoAmigoSecreto", JSON.stringify(resultado));
 
-  // Mostrar resultado
-  let lista = document.getElementById("resultado");
-  lista.innerHTML = "";
-  for (let i = 0; i < nomes.length; i++) {
-    let li = document.createElement("li");
-    li.textContent = `${nomes[i]} → ${sorteados[i]}`;
-    lista.appendChild(li);
-  }
-}
+  // redirecionar
+  window.location.href = "resultado.html";
+});

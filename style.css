@@ -1,51 +1,144 @@
+
 :root{
-  --bg: #fff7ff;
-  --card: #ffffff;
-  --accent1: #8b5cf6;   /* roxo */
-  --accent2: #06b6d4;   /* turquesa */
-  --accent3: #ffb86b;   /* laranja */
-  --text: #2b2b2b;
-  --muted: #666;
-  --glass: rgba(255,255,255,0.6);
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 10px;
-  --shadow: 0 10px 30px rgba(11,11,20,0.08);
   --transition: 240ms cubic-bezier(.2,.9,.3,1);
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-*{box-sizing:border-box}
-html,body{
-  height:100%;
-  margin:0;
-  background: linear-gradient(180deg, #fffbff 0%, #f0f7ff 100%);
-  color:var(--text);
+/* DEFAULT (fallback) */
+body {
+  --bg: linear-gradient(180deg, #f9fafb 0%, #f2f6fc 100%);
+  --card: #ffffff;
+  --accent1: #7c3aed;
+  --accent2: #0ea5e9;
+  --accent3: #f97316;
+  --text: #1e1e2e;
+  --muted: #4b5563;
+  --glass: rgba(255,255,255,0.8);
+  --shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
+/* 🔹 Tema escuro (quando body.dark) */
+body.dark {
+  --bg: linear-gradient(180deg, #0f0f14 0%, #1a1b26 100%);
+  --card: #24273a;
+  --accent1: #8b5cf6;
+  --accent2: #06b6d4;
+  --accent3: #ffb86b;
+  --text: #f8f8f8;
+  --muted: #a1a1aa;
+  --glass: rgba(36,39,58,0.8);
+  --shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* 🔹 Tema claro (quando body.light) */
+body.light {
+  --bg: linear-gradient(180deg, #f9fafb 0%, #f2f6fc 100%);
+  --card: #ffffff;
+  --accent1: #7c3aed;
+  --accent2: #0ea5e9;
+  --accent3: #f97316;
+  --text: #1e1e2e;
+  --muted: #4b5563;
+  --glass: rgba(255,255,255,0.8);
+  --shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* 🔹 Aplica o fundo na página inteira (corrigido) */
+html, body {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--transition), color var(--transition);
+}
+
+/* 🌌 Fundo comemorativo */
+body.resultado {
+  background: radial-gradient(circle, #1a1b26 0%, #0f0f14 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* camada 1 - estrelinhas brancas */
+body.resultado::before,
+body.resultado::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* camada 1: estrelas brancas piscando + movimento */
+body.resultado::before {
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: twinkle1 3s infinite alternate,
+             moveStars 40s linear infinite;
+  opacity: 0.6;
+}
+
+/* camada 2: estrelas coloridas sutis + movimento */
+body.resultado::after {
+  background-image:
+    radial-gradient(#ffb6c1 1px, transparent 1px), /* rosa */
+    radial-gradient(#add8e6 1px, transparent 1px), /* azul */
+    radial-gradient(#ffd700 1px, transparent 1px); /* dourado */
+  background-size: 60px 60px, 80px 80px, 100px 100px;
+  background-position: 20px 20px, 40px 60px, 70px 30px;
+  animation: twinkle2 5s infinite alternate,
+             moveStars 60s linear infinite;
+  opacity: 0.4;
+}
+
+/* piscar */
+@keyframes twinkle1 {
+  from { opacity: 0.3; }
+  to { opacity: 0.9; }
+}
+
+@keyframes twinkle2 {
+  from { opacity: 0.2; }
+  to { opacity: 0.7; }
+}
+
+/* movimento suave */
+@keyframes moveStars {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to   { background-position: 200px 200px, 300px 400px, 400px 300px; }
+}
+
+
+
+/* container principal: mantém layout estável para todas as páginas */
 .container{
   max-width:920px;
-  margin:48px auto;
-  padding:28px;
-  display:flex;
-  gap:28px;
-  align-items:flex-start;
-  justify-content:center;
+  margin: 48px auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center; /* centraliza cards */
 }
 
 /* card base */
 .card{
-  background: linear-gradient(135deg, var(--card), rgba(255,255,255,0.8));
-  border-radius:var(--radius-lg);
-  padding:20px;
-  box-shadow:var(--shadow);
-  width:100%;
-  min-width:320px;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 760px;
   transition: transform var(--transition), box-shadow var(--transition);
   backdrop-filter: blur(6px);
 }
 
-/* hero / welcome */
+/* welcome hero */
 .welcome-hero{
   display:flex;
   flex-direction:column;
@@ -53,13 +146,12 @@ html,body{
   justify-content:center;
   text-align:center;
   gap:12px;
-  padding:48px 32px;
+  padding:28px;
 }
 
 .welcome-hero h1{
   margin:0;
   font-size:28px;
-  letter-spacing:0.2px;
   color:var(--accent1);
 }
 
@@ -68,7 +160,55 @@ html,body{
   color:var(--muted);
 }
 
-/* primary button */
+/* botão de alternar tema no canto */
+#theme-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: var(--card);
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), transform var(--transition);
+  z-index: 1000;
+}
+
+#theme-toggle:hover {
+  transform: scale(1.08);
+  background: var(--accent1);
+  color: #fff;
+}
+
+/* inputs e controles */
+.controls, .form-row {
+  display:flex;
+  gap:10px;
+  width:100%;
+  align-items:center;
+}
+
+#nomeInput{
+  flex:1;
+  padding:12px 14px;
+  border-radius:var(--radius-md);
+  border:1px solid rgba(0,0,0,0.06);
+  outline:none;
+  font-size:15px;
+  transition: box-shadow var(--transition), border-color var(--transition);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+}
+
+#nomeInput:focus{
+  box-shadow: 0 8px 22px rgba(139,92,246,0.12);
+  border-color: var(--accent1);
+}
+
+/* botão padrão */
 .btn{
   appearance:none;
   border: none;
@@ -76,39 +216,23 @@ html,body{
   border-radius:12px;
   font-weight:600;
   cursor:pointer;
-  transition: transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 6px 18px rgba(139,92,246,0.18);
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  box-shadow: 0 6px 18px rgba(11,11,20,0.08);
   background: linear-gradient(90deg, var(--accent1), var(--accent2));
   color:#fff;
 }
-.btn:active{ transform: translateY(1px) scale(0.996); }
-.btn:hover{ transform: translateY(-3px); box-shadow: 0 18px 36px rgba(11,11,20,0.12); }
 
-/* form area */
-.form-row{
-  display:flex;
-  gap:10px;
-  margin-bottom:12px;
-  align-items:center;
+/* estilos de botão inline */
+button:not(.icon-btn):not(.btn){
+  padding:8px 12px;
+  border-radius:10px;
+  border:none;
+  background:var(--accent1);
+  color:#fff;
+  cursor:pointer;
 }
 
-#nomeInput{
-  flex:1;
-  padding:12px 14px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,0.06);
-  outline:none;
-  font-size:15px;
-  transition: box-shadow var(--transition), border-color var(--transition);
-  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.8));
-}
-
-#nomeInput:focus{
-  box-shadow: 0 8px 22px rgba(11,11,20,0.06);
-  border-color: rgba(139,92,246,0.7);
-}
-
-/* participants list */
+/* lista de participantes */
 .part-list{
   margin:0;
   padding:0;
@@ -116,10 +240,12 @@ html,body{
   display:flex;
   flex-direction:column;
   gap:8px;
-  max-height:230px;
+  width:100%;
+  max-height:260px;
   overflow:auto;
 }
 
+/* item individual */
 .part-item{
   display:flex;
   align-items:center;
@@ -127,47 +253,32 @@ html,body{
   gap:10px;
   padding:10px 12px;
   border-radius:12px;
-  background: linear-gradient(90deg, rgba(11,11,20,0.02), rgba(255,255,255,0.4));
-  border:1px solid rgba(11,11,20,0.03);
+  background: linear-gradient(90deg, rgba(11,11,20,0.02), rgba(255,255,255,0.02));
+  border:1px solid rgba(0,0,0,0.06);
   font-weight:600;
   color:var(--text);
+  position:relative;
 }
 
-/*Adicionando efeitos*/
-/* participante individual */
-.part-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:12px;
-  background: linear-gradient(90deg, rgba(11,11,20,0.02), rgba(255,255,255,0.4));
-  border:1px solid rgba(11,11,20,0.03);
-  font-weight:600;
-  color:var(--text);
-  position: relative; /* necessário para posicionar os botões */
-}
-
-/* container dos botões de ação */
+/* container dos botões */
 .item-actions{
   display:flex;
   gap:8px;
-  opacity:0; /* começa invisível */
-  transition: opacity 0.3s;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition: opacity 0.25s ease, transform var(--transition);
+  transform: translateY(4px);
 }
 
 /* mostra os botões apenas quando o mouse está sobre o item */
 .part-item:hover .item-actions{
   opacity:1;
+  pointer-events:auto;
+  transform: translateY(0);
 }
 
-
-.item-actions{
-  display:flex;
-  gap:8px;
-}
-
+/* botões pequenos com icone */
 .icon-btn{
   background:transparent;
   border:none;
@@ -176,6 +287,7 @@ html,body{
   padding:6px;
   border-radius:10px;
   transition: background var(--transition), transform var(--transition);
+  color:var(--text);
 }
 .icon-btn:hover{ background: rgba(11,11,20,0.04); transform: translateY(-2px); }
 
@@ -187,20 +299,22 @@ html,body{
   display:flex;
   flex-direction:column;
   gap:8px;
+  width:100%;
 }
 
 .result-item{
   padding:12px;
   border-radius:12px;
-  background: linear-gradient(90deg, rgba(6,182,212,0.06), rgba(139,92,246,0.04));
-  border:1px solid rgba(139,92,246,0.09);
+  background: linear-gradient(90deg, rgba(6,182,212,0.04), rgba(139,92,246,0.02));
+  border:1px solid rgba(0,0,0,0.06);
   font-weight:700;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  color:var(--text);
 }
 
-/* small helpers */
+/* helpers */
 .hint{
   font-size:13px;
   color:var(--muted);
@@ -216,6 +330,7 @@ html,body{
 
 /* responsive */
 @media (max-width:760px){
-  .container{ padding:16px; margin:18px auto; flex-direction:column; }
-  .welcome-hero{ padding:32px 18px; }
+  .container{ padding:16px; margin:18px auto; }
+  .welcome-hero{ padding:20px 12px; }
+  .card{ padding:16px; }
 }

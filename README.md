@@ -50,8 +50,12 @@ Uma mistura de código + diversão 🎀
 ---
 ✨ *Agora é só compartilhar com os amigos e se divertir no Amigo Secreto!* ✨
 
-Projeto desenvolvido por **Nicole Marcondes** 💜  
-Uma mistura de código + diversão 🎀
 
----
-✨ *Agora é só compartilhar com os amigos e se divertir no Amigo Secreto!* ✨
+
+
+
+
+
+
+
+

@@ -25,10 +25,17 @@ if (themeToggle) {
 // =====================
 // Página Amigo Secreto
 // =====================
+// Limpa o resultado anterior para garantir um novo sorteio
+// localStorage.removeItem("resultadoAmigoSecreto");
+
 const nomeInput = document.getElementById("nomeInput");
 const btnAdicionar = document.getElementById("btnAdicionar");
 const lista = document.getElementById("lista");
 const btnSortear = document.getElementById("btnSortear");
+
+if (btnSortear) {
+  localStorage.removeItem("resultadoAmigoSecreto");
+}
 
 let nomes = [];
 
@@ -59,7 +66,7 @@ if (nomeInput && btnAdicionar && lista) {
     nomes.forEach((nome, index) => {
       const li = document.createElement("li");
       li.className = "part-item";
-      
+
       const spanNome = document.createElement("span");
       spanNome.textContent = nome;
       li.appendChild(spanNome);
@@ -84,6 +91,7 @@ if (nomeInput && btnAdicionar && lista) {
 
       lista.appendChild(li);
     });
+    // Botão não será desabilitado; alerta tratará validação ao clicar
   }
 
   // remover
@@ -112,34 +120,22 @@ if (nomeInput && btnAdicionar && lista) {
     atualizarLista();
   }
 
-// sortear amigos
-document.getElementById("btnSortear").addEventListener("click", function() {
-  if (nomes.length < 2) {
-    alert("Adicione pelo menos 2 participantes para sortear!");
-    return;
+  // sortear
+  if (btnSortear) {
+    btnSortear.addEventListener("click", () => {
+      if (nomes.length < 2) {
+        alert("Adicione pelo menos 2 participantes!");
+        return;
+      }
+
+      // garante embaralhamento sem autoatribuição (já funciona pela rotação)
+      const sorteados = [...nomes].sort(() => Math.random() - 0.5);
+      const resultado = sorteados.map((n, i) => `${n} ➝ ${sorteados[(i + 1) % sorteados.length]}`);
+      localStorage.setItem("resultadoAmigoSecreto", JSON.stringify(resultado));
+      window.location.href = "Resultado.html"; // corrigido case
+    });
   }
-
-  let sorteados = [...nomes];
-  let resultado = [];
-
-  sorteados.sort(() => Math.random() - 0.5);
-
-  for (let i = 0; i < sorteados.length; i++) {
-    let amigo = sorteados[(i + 1) % sorteados.length];
-    resultado.push(`${sorteados[i]} ➝ ${amigo}`);
-  }
-
-  // 🔹 Limpar antes de salvar
-  localStorage.removeItem("resultadoAmigoSecreto");
-
-  // 🔹 Salvar novo sorteio
-  localStorage.setItem("resultadoAmigoSecreto", JSON.stringify(resultado));
-
-  // 🔹 Redirecionar
-  window.location.href = "resultado.html";
-});
-
-
-
 }
+
+
 

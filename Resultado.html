@@ -134,9 +134,6 @@
   <div class="container">
     <div class="card welcome-hero">
       <h1>🎉 Resultado do Amigo Secreto 🎁</h1>
-
-      <ul id="listaParticipantes"></ul> 
-
       <p>Clique no seu nome para descobrir quem você tirou:</p>
       <ul id="listaParticipantes"></ul>
       <button class="btn" onclick="mostrarTodos()">👀 Ver todos</button>
@@ -170,40 +167,50 @@
     setTimeout(jogarConfete, 1500);
     setTimeout(jogarConfete, 2500);
 
- // carregar resultado do localStorage
-  const resultado = JSON.parse(localStorage.getItem("resultadoAmigoSecreto")) || [];
+    // Parse seguro
+    const rawResultado = localStorage.getItem("resultadoAmigoSecreto");
+    let resultado = [];
+    try {
+      if (rawResultado) resultado = JSON.parse(rawResultado);
+    } catch(e){
+      console.warn("Resultado inválido no localStorage, limpando.", e);
+      localStorage.removeItem("resultadoAmigoSecreto");
+      resultado = [];
+    }
+    if (!Array.isArray(resultado)) resultado = [];
 
-  if (resultado.length === 0) {
-    alert("Nenhum sorteio encontrado! Volte e adicione participantes.");
-    window.location.href = "amigosecreto.html";
-  } else {
     const pares = resultado.map(item => {
       const [quem, quemTirou] = item.split(" ➝ ");
       return { quem, quemTirou };
     });
 
-    // renderizar lista
     const lista = document.getElementById("listaParticipantes");
-    pares.forEach(p => {
+    if (pares.length === 0) {
       const li = document.createElement("li");
-      const btn = document.createElement("button");
-      btn.textContent = p.quem;
-      btn.className = "btn";
-      btn.onclick = () => alert(`🎁 ${p.quem}, você tirou: ${p.quemTirou}`);
-      li.appendChild(btn);
+      li.style.listStyle = "none";
+      li.textContent = "Nenhum sorteio encontrado. Volte e realize o sorteio.";
       lista.appendChild(li);
-    });
-
-    // mostrar todos
-    window.mostrarTodos = function() {
-      let texto = "🎉 Resultado completo:\n\n";
+    } else {
       pares.forEach(p => {
-        texto += `${p.quem} ➝ ${p.quemTirou}\n`;
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.textContent = p.quem;
+        btn.className = "btn";
+        btn.onclick = () => alert(`🎁 ${p.quem}, você tirou: ${p.quemTirou}`);
+        li.appendChild(btn);
+        lista.appendChild(li);
       });
-      alert(texto);
-    };
-  }
+    }
 
+    function mostrarTodos() {
+      if (!pares.length) {
+        alert("Nenhum resultado disponível.");
+        return;
+      }
+      let texto = "🎉 Resultado completo:\n\n";
+      pares.forEach(p => { texto += `${p.quem} ➝ ${p.quemTirou}\n`; });
+      alert(texto);
+    }
   </script>
 </body>
 </html>

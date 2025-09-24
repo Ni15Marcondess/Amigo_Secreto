@@ -134,6 +134,9 @@
   <div class="container">
     <div class="card welcome-hero">
       <h1>🎉 Resultado do Amigo Secreto 🎁</h1>
+
+      <ul id="listaParticipantes"></ul> 
+
       <p>Clique no seu nome para descobrir quem você tirou:</p>
       <ul id="listaParticipantes"></ul>
       <button class="btn" onclick="mostrarTodos()">👀 Ver todos</button>
@@ -167,14 +170,19 @@
     setTimeout(jogarConfete, 1500);
     setTimeout(jogarConfete, 2500);
 
-    // 🔹 Carregar resultado do localStorage
-    const resultado = JSON.parse(localStorage.getItem("resultadoAmigoSecreto")) || [];
+ // carregar resultado do localStorage
+  const resultado = JSON.parse(localStorage.getItem("resultadoAmigoSecreto")) || [];
+
+  if (resultado.length === 0) {
+    alert("Nenhum sorteio encontrado! Volte e adicione participantes.");
+    window.location.href = "amigosecreto.html";
+  } else {
     const pares = resultado.map(item => {
       const [quem, quemTirou] = item.split(" ➝ ");
       return { quem, quemTirou };
     });
 
-    // 🔹 Renderizar lista de participantes
+    // renderizar lista
     const lista = document.getElementById("listaParticipantes");
     pares.forEach(p => {
       const li = document.createElement("li");
@@ -186,14 +194,16 @@
       lista.appendChild(li);
     });
 
-    // 🔹 Mostrar todos
-    function mostrarTodos() {
+    // mostrar todos
+    window.mostrarTodos = function() {
       let texto = "🎉 Resultado completo:\n\n";
       pares.forEach(p => {
         texto += `${p.quem} ➝ ${p.quemTirou}\n`;
       });
       alert(texto);
-    }
+    };
+  }
+
   </script>
 </body>
 </html>

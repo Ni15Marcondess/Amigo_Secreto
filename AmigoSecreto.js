@@ -112,20 +112,34 @@ if (nomeInput && btnAdicionar && lista) {
     atualizarLista();
   }
 
-  // sortear
-  if (btnSortear) {
-    btnSortear.addEventListener("click", () => {
-      if (nomes.length < 2) {
-        alert("Adicione pelo menos 2 participantes!");
-        return;
-      }
-
-      let sorteados = [...nomes].sort(() => Math.random() - 0.5);
-      let resultado = sorteados.map((n, i) => `${n} ➝ ${sorteados[(i + 1) % sorteados.length]}`);
-
-      localStorage.setItem("resultadoAmigoSecreto", JSON.stringify(resultado));
-      window.location.href = "resultado.html";
-    });
+// sortear amigos
+document.getElementById("btnSortear").addEventListener("click", function() {
+  if (nomes.length < 2) {
+    alert("Adicione pelo menos 2 participantes para sortear!");
+    return;
   }
+
+  let sorteados = [...nomes];
+  let resultado = [];
+
+  sorteados.sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < sorteados.length; i++) {
+    let amigo = sorteados[(i + 1) % sorteados.length];
+    resultado.push(`${sorteados[i]} ➝ ${amigo}`);
+  }
+
+  // 🔹 Limpar antes de salvar
+  localStorage.removeItem("resultadoAmigoSecreto");
+
+  // 🔹 Salvar novo sorteio
+  localStorage.setItem("resultadoAmigoSecreto", JSON.stringify(resultado));
+
+  // 🔹 Redirecionar
+  window.location.href = "resultado.html";
+});
+
+
+
 }
 
